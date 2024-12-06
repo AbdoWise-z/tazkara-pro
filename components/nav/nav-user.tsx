@@ -18,8 +18,8 @@ import {useRouter} from "next/navigation";
 import {useUser} from "@/components/providers/current-user-provider";
 import {ModalType, useModal} from "@/hooks/use-modal";
 import {useClerk} from "@clerk/nextjs";
-import axios from "axios";
 import {toast} from "sonner";
+import {RequestMod} from "@/components/nav/actions";
 
 export function NavUser() {
   const { openUserProfile, signOut } = useClerk();
@@ -30,9 +30,9 @@ export function NavUser() {
 
   const handleModRequest = async () => {
     try {
-      const response = await axios.post("/api/mod/request");
+      const result = await RequestMod();
 
-      if (response.status == 200) {
+      if (result.success) {
         toast("Your request has been sent!", {
           description: `Your request will be evaluated by an admin soon`,
           action: {
@@ -42,7 +42,7 @@ export function NavUser() {
         })
       }
 
-      if (response.status == 201) {
+      if (!result.success) {
         toast("You already sent a request before.", {
           description: `Your request will be evaluated by an admin soon`,
           action: {
@@ -113,7 +113,7 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => handleModRequest()}>
+              <DropdownMenuItem disabled={user.Role != 'Fan'} onClick={() => handleModRequest()}>
                 <Sparkles />
                 Be a mod
               </DropdownMenuItem>

@@ -7,7 +7,7 @@ import {range} from "d3-array";
 import {useFloatingWindow} from "@/components/providers/floating-window-provider";
 import {useUser} from "@/components/providers/current-user-provider";
 import {cn} from "@/lib/utils";
-import {addReservation} from "@/app/(main)/match/[match_id]/actions";
+import {addReservation, removeReservation} from "@/app/(main)/match/[match_id]/actions";
 
 const InteractiveMatchPage = (
   {match} : {match: MatchWithStadiumWithReservations}
@@ -20,10 +20,28 @@ const InteractiveMatchPage = (
   const floatingWindow = useFloatingWindow();
   const { user } = useUser();
 
+  const [loading, setLoading] = React.useState<number[][]>([]);
+
   const handleCellClick = async (row: number, column: number, action: "CancelReservation" | "Reserve") => {
     if (action == "Reserve") {
-      const result = await addReservation(match.id, row, column);
-      console.log(result);
+      setLoading((l) => [...l , [row, column]]);
+      try {
+        const result = await addReservation(match.id, row, column);
+        console.log(result);
+      } catch (e) {
+        console.error(e);
+      }
+      setLoading((l) => l.filter(k => !(k[0] == row && k[1] == column)));
+
+    } else {
+      setLoading((l) => [...l , [row, column]]);
+      try {
+        const result = await removeReservation(match.id, row, column);
+        console.log(result);
+      } catch (e) {
+        console.error(e);
+      }
+      setLoading((l) => l.filter(k => !(k[0] == row && k[1] == column)));
     }
   }
 
@@ -101,14 +119,16 @@ const InteractiveMatchPage = (
             {
               range(0, match.stadium.columnCount).map((column) => {
                 const mIndex = row * match.stadium.columnCount + column;
-                const reservation = match.Reservations.find((i) => i.seatIndex == mIndex);
+                const reservation = match.Reservations.find((i: { seatIndex: number; }) => i.seatIndex == mIndex);
 
                 const color =
-                  reservation == null ? "bg-gray-600" :
-                    reservation.userId == user?.id ? "bg-green-600" :
+                  loading.find((k) => k[0] == row && k[1] == column) != null ? "bg-yellow-500" :
+                    reservation == null ? "bg-gray-600" :
+                     reservation.userId == user?.id ? "bg-green-600" :
                       "bg-red-600";
 
                 const text =
+                  loading.find((k) => k[0] == row && k[1] == column) != null ? "trying to book this for you" :
                   reservation == null ? "Empty seat" :
                     reservation.userId == user?.id ? "You own this" :
                     "Someone else booked this";

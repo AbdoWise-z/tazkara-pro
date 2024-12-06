@@ -9,8 +9,14 @@ import {
 
 import {SidebarTrigger} from "@/components/ui/sidebar";
 import {Separator} from "@/components/ui/separator";
+import {redirect} from "next/navigation";
 
 export default function Home() {
+
+  if (true) {
+    return redirect("/match"); // I'm too lazy to do a landing page tbh ..
+  }
+
   return (
     <>
       <header
@@ -44,3 +50,5 @@ export default function Home() {
     </>
   )
 }
+
+

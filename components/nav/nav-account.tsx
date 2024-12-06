@@ -17,7 +17,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 
-export function NavMain({
+export function NavAccount({
                           items,
                         }: {
   items: {
@@ -29,12 +29,13 @@ export function NavMain({
     items?: {
       title: string
       url: string
+      id: string
     }[]
   }[]
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Main</SidebarGroupLabel>
+      <SidebarGroupLabel>Account</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
@@ -54,7 +55,7 @@ export function NavMain({
               <CollapsibleContent>
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
+                    <SidebarMenuSubItem key={subItem.id}>
                       <SidebarMenuSubButton asChild>
                         <a href={subItem.url}>
                           <Hash className={"w-4 h-4"}/>

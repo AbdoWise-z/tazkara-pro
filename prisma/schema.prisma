@@ -67,6 +67,6 @@ model Match {
 
 model AuthorizationRequest {
   id     String @id @default(uuid()) @map("_id")
-  userId String
+  userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
