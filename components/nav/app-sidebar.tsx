@@ -43,7 +43,7 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
             url: "/tickets",
             icon: AlbumIcon,
             isActive: true,
-            items: reservations.map(
+            items: (reservations ?? []).map(
               (i) => {
                 return {
                   title: `${i.homeTeam} vs ${i.awayTeam}`,
