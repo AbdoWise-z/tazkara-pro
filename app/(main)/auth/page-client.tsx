@@ -5,7 +5,7 @@ import {AuthorizationWithUser} from "@/app/(main)/auth/types";
 import {approveAuthRequest, getAuthRequests, rejectAuthRequest} from "@/app/(main)/auth/actions";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
-import {ChevronDownIcon, ChevronsUpDownIcon, ChevronUpIcon} from "lucide-react";
+import {ChevronDownIcon, ChevronsUpDownIcon, ChevronUpIcon, Loader, Loader2} from "lucide-react";
 import {Input} from "@/components/ui/input";
 import {toast} from "sonner";
 
@@ -135,6 +135,15 @@ const PageClient = () => {
     return <ChevronsUpDownIcon className="w-4 h-4" />
   }
 
+  if (loading) {
+    return (
+      <div className="flex flex-col content-center items-center w-full h-full justify-center">
+        <Loader className={"w-6 h-6 animate-spin justify-center"}/>
+        Loading ..
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <Input
@@ -146,16 +155,16 @@ const PageClient = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead onClick={() => handleSort('name')} className="cursor-pointer">
+            <TableHead onClick={() => handleSort('name')} className="cursor-pointer w-1/3">
               Name <SortIcon columnKey="name" />
             </TableHead>
-            <TableHead onClick={() => handleSort('birthDate')} className="cursor-pointer">
+            <TableHead onClick={() => handleSort('birthDate')} className="cursor-pointer w-1/6">
               Birth Date <SortIcon columnKey="birthDate" />
             </TableHead>
-            <TableHead onClick={() => handleSort('email')} className="cursor-pointer">
+            <TableHead onClick={() => handleSort('email')} className="cursor-pointer w-1/3">
               Email Address <SortIcon columnKey="email" />
             </TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead className={"w-1/3"}>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -171,15 +180,22 @@ const PageClient = () => {
               </TableCell>
               <TableCell>{entry.user.EmailAddress}</TableCell>
               <TableCell>
-                {}
-                <div className="flex space-x-2">
-                  <Button onClick={() => handleApprove(entry)} variant="outline">
-                    Approve
-                  </Button>
-                  <Button onClick={() => handleReject(entry)} variant="outline">
-                    Reject
-                  </Button>
-                </div>
+                {(loadingList.find(k => k == entry.id) != null) && (
+                  <div className="flex space-x-2 py-2 w-full">
+                    <Loader2 className={"w-6 h-6 animate-spin justify-center"} />
+                    <span>Loading</span>
+                  </div>
+                )}
+                {(loadingList.find(k => k == entry.id) == null) && (
+                  <div className="flex space-x-2">
+                    <Button onClick={() => handleApprove(entry)} variant="outline">
+                      Approve
+                    </Button>
+                    <Button onClick={() => handleReject(entry)} variant="outline">
+                      Reject
+                    </Button>
+                  </div>
+                )}
               </TableCell>
             </TableRow>
           ))}
