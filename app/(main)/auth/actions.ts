@@ -3,7 +3,6 @@
 
 import {currentUserProfile} from "@/lib/user-profile";
 import {db} from "@/lib/db";
-import {MatchWithTickets} from "@/app/(main)/tickets/types";
 import {Role} from "@prisma/client";
 
 export async function getAuthRequests() {

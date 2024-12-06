@@ -1,6 +1,6 @@
 "use client";
 
-import {Flame, LandPlot, SquareKanban,} from "lucide-react"
+import {Flame} from "lucide-react"
 
 import {
   SidebarGroup,
@@ -12,12 +12,10 @@ import {
 import {HeaderAction} from "@/components/nav/types";
 import * as React from "react";
 import {Button} from "@/components/ui/button";
-import {useUser} from "@/components/providers/current-user-provider";
 import {useRouter} from "next/navigation";
 
 
 export function NavExplore() {
-  const { user } = useUser();
   const router = useRouter();
 
   // const modal = useModal();

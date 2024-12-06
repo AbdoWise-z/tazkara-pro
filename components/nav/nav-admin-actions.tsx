@@ -1,6 +1,6 @@
 "use client";
 
-import {LandPlot, SquareKanban,} from "lucide-react"
+import {LandPlot,} from "lucide-react"
 
 import {
   SidebarGroup,

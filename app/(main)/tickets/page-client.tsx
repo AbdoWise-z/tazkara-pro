@@ -58,7 +58,7 @@ const PageClient = () => {
   }
 
   if (reservations.length == 0) {
-    return <p>Seems like you didn't do any reservation.</p>
+    return <p>{"Seems like you didn't do any reservation."}</p>
   }
 
   return (

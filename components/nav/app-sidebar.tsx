@@ -15,7 +15,6 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import {currentUserProfile} from "@/lib/user-profile";
-import {db} from "@/lib/db";
 import {getMatchesWithReservations} from "@/app/(main)/tickets/actions";
 import {NavExplore} from "@/components/nav/nav-explore";
 import {NavAdminActions} from "@/components/nav/nav-admin-actions";

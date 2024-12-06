@@ -5,8 +5,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbList, BreadcrumbPage,
-  BreadcrumbSeparator
+  BreadcrumbList
 } from "@/components/ui/breadcrumb";
 import PageClient from "@/app/(main)/tickets/page-client";
 
