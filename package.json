@@ -8,6 +8,12 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "eslintConfig": {
+    "extends": "react-app",
+    "rules": {
+      "@typescript-eslint/no-unused-vars": "off"
+    }
+  },
   "dependencies": {
     "@clerk/nextjs": "^6.6.0",
     "@hookform/resolvers": "^3.9.1",

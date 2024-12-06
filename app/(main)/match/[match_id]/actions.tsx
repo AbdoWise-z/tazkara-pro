@@ -54,7 +54,8 @@ export async function addReservation(matchId: string, row: number, column: numbe
       return {
         success: true,
       }
-    } catch (_) {
+    } catch (e) {
+      console.log(e);
       return {
         success: false,
         fatal: false,

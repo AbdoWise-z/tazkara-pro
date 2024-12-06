@@ -19,6 +19,7 @@ export async function GET(
     if (!user) return new NextResponse("Not found", { status: 404 });
     return NextResponse.json(user);
   } catch (error) {
+    console.log(error)
     return new NextResponse("Internal error", { status: 500 });
   }
 }

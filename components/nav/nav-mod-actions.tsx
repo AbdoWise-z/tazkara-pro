@@ -1,6 +1,6 @@
 "use client";
 
-import {Landmark, LandPlot, SquareKanban,} from "lucide-react"
+import {LandPlot, SquareKanban,} from "lucide-react"
 
 import {
   SidebarGroup,
@@ -12,7 +12,6 @@ import {
 import {HeaderAction} from "@/components/nav/types";
 import * as React from "react";
 import {Button} from "@/components/ui/button";
-import {useModal} from "@/hooks/use-modal";
 import {useUser} from "@/components/providers/current-user-provider";
 import {useRouter} from "next/navigation";
 
@@ -22,7 +21,7 @@ export function NavModActions() {
   const hasPermission = user?.Role == "Manager" || user?.Role == "Administrator";
   const router = useRouter();
 
-  const modal = useModal();
+  // const modal = useModal();
   const Actions: HeaderAction[] = [
     {
       name: "Manage Stadiums",

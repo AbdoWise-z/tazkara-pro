@@ -1,5 +1,4 @@
 import React from 'react';
-import {currentUserProfile} from "@/lib/user-profile";
 import {SidebarTrigger} from "@/components/ui/sidebar";
 import {Separator} from "@/components/ui/separator";
 import {
@@ -22,7 +21,7 @@ const Page = async (
 ) => {
 
   const match_id = (await params).match_id;
-  const user = await currentUserProfile(true);
+  // const user = await currentUserProfile(true);
   const match = await db.match.findUnique({
     where: {
       id: match_id,
