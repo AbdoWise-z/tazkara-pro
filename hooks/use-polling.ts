@@ -9,7 +9,6 @@ interface PollingProviderProps {
   endpoint: string;
   interval?: number;
   enabled?: boolean;
-  pageParam?: number;
   pageSize?: number;
 }
 

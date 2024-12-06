@@ -4,8 +4,7 @@ const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)',
   '/sign-up(.*)' ,
   "/",
-  "/dashboard(.*)", // dashboard page
-  "/match(.*)", // prof adding page
+  "/match",
 ]);
 
 export default clerkMiddleware( async (auth, request) => {
@@ -18,6 +17,6 @@ export const config = {
   matcher: [
     "/((?!.*\\..*|_next).*)",
     "/",
-    "/(api|trpc)(.*)"
+    "/(api|trpc)(.*)",
   ],
 };

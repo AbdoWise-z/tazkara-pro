@@ -6,6 +6,7 @@ import {ThemeProvider} from "@/components/providers/theme-provider";
 import {UserProvider} from "@/components/providers/current-user-provider";
 import ModalProvider from "@/components/providers/modal-provider";
 import {Toaster} from "@/components/ui/sonner";
+import FloatingWindowProvider from "@/components/providers/floating-window-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,7 +43,9 @@ export default function RootLayout({
           >
             <UserProvider>
               <Toaster/>
-              {children}
+              <FloatingWindowProvider>
+                {children}
+              </FloatingWindowProvider>
               <ModalProvider/>
             </UserProvider>
           </ThemeProvider>

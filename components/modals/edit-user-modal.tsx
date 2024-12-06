@@ -11,7 +11,7 @@ import { useUser } from "@/components/providers/current-user-provider";
 import { cn } from "@/lib/utils";
 import {
   Dialog, DialogContent, DialogDescription,
-  DialogFooter, DialogHeader, DialogTitle, DialogTrigger
+  DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -88,9 +88,6 @@ const EditUserModal = () => {
         form.setValue("address" , user?.Address ?? null);
       }
     }}>
-      <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
-      </DialogTrigger>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>

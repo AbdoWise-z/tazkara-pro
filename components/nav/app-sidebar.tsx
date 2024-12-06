@@ -1,20 +1,10 @@
 import * as React from "react"
 import {
-  Album, AlbumIcon,
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
+  AlbumIcon,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav/nav-main"
-import { NavProjects } from "@/components/nav/nav-projects"
+import { NavModActions } from "@/components/nav/nav-mod-actions"
 import { NavUser } from "@/components/nav/nav-user"
 import { NavHeader } from "@/components/nav/nav-header"
 import {
@@ -62,7 +52,7 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
             )
           }
         ]} />
-        <NavProjects projects={[]} />
+        <NavModActions />
       </SidebarContent>
       <SidebarFooter>
         <NavUser/>

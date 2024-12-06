@@ -41,14 +41,13 @@ model Stadium {
 }
 
 model Reservation {
-  id           String @id @default(uuid()) @map("_id")
-  ticketNumber String
-  seatIndex    Int
+  id        String @id @default(uuid()) @map("_id")
+  seatIndex Int
 
-  match   Match  @relation(fields: [matchId], references: [id])
+  match   Match  @relation(fields: [matchId], references: [id], onDelete: Cascade)
   matchId String
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }
 
@@ -58,7 +57,7 @@ model Match {
   awayTeam String
 
   date      DateTime
-  stadium   Stadium  @relation(fields: [stadiumId], references: [id])
+  stadium   Stadium  @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
   stadiumId String
 
   mainReferee  String
@@ -69,5 +68,5 @@ model Match {
 model AuthorizationRequest {
   id     String @id @default(uuid()) @map("_id")
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

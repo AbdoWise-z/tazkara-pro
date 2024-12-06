@@ -3,11 +3,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 
-enum Role {
-  USER,
-  ADMIN
-}
-
 interface User {
   id: string;
   clerk_id: string;
@@ -18,7 +13,7 @@ interface User {
   City: string | null;
   Address: string | null;
   EmailAddress: string;
-  Role: Role;
+  Role: "Fan" | "Manager" | "Administrator";
   createdAt: Date;
   updatedAt: Date;
 }

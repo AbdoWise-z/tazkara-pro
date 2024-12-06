@@ -1,14 +1,13 @@
 "use client"
 
 import * as React from "react"
-import {ChevronsUpDown, Newspaper, Plus, Ticket, TicketPercent, TicketPlus} from "lucide-react"
+import {ChevronsUpDown, Newspaper, TicketPercent, TicketPlus} from "lucide-react"
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -20,29 +19,28 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import {useRouter} from "next/navigation";
+import {HeaderAction} from "@/components/nav/types";
 
-type HeaderAction = {
-  name: string;
-  url: string;
-  icon: React.ReactNode;
-}
 
-const Actions: HeaderAction[] = [
-  {
-    name: "News",
-    url: "/",
-    icon: <Newspaper/>
-  },
-  {
-    name: "Reserve a match",
-    url: "/match",
-    icon: <TicketPlus/>
-  }
-]
 
 export function NavHeader() {
   const { isMobile } = useSidebar()
   const router = useRouter();
+
+  const Actions: HeaderAction[] = [
+    {
+      name: "News",
+      url: "/",
+      icon: Newspaper,
+      func: null,
+    },
+    {
+      name: "Reserve a match",
+      url: "/match",
+      icon: TicketPlus,
+      func: null,
+    }
+  ]
 
   return (
 
@@ -78,12 +76,17 @@ export function NavHeader() {
               <DropdownMenuItem
                 key={action.name}
                 onClick={() => {
-                  router.push(action.url);
+                  if (action.url) {
+                    router.push(action.url);
+                  }
+                  if (action.func) {
+                    action.func();
+                  }
                 }}
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-sm border">
-                  {action.icon}
+                  <action.icon className="w-4 h-4"/>
                 </div>
                 {action.name}
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
