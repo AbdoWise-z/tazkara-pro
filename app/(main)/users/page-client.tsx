@@ -22,11 +22,11 @@ const PageClient = () => {
 
   const [loadingList , setLoadingList] = useState<string[]>([]);
 
-  const [page, setPage] = useState<number>(0);
+  // const [page, setPage] = useState<number>(0);
 
   useEffect(() => {
     const load = async () => {
-      const result = await getUsersList(page);
+      const result = await getUsersList(0);
       console.log(result);
       if (result.success){
         setUsersList(result.data!);

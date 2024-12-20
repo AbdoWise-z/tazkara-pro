@@ -6,7 +6,7 @@ import { CardDetailsFormData, CardDetailsSchema } from '@/forms/card-form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import {useState} from "react";
 import {Loader2} from "lucide-react";
 interface CardDetailsFormProps {
@@ -15,7 +15,6 @@ interface CardDetailsFormProps {
 
 export default function CardDetailsForm({ onSubmit }: CardDetailsFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitMessage, setSubmitMessage] = useState('')
 
   const {
     register,
@@ -28,14 +27,12 @@ export default function CardDetailsForm({ onSubmit }: CardDetailsFormProps) {
 
   const handleFormSubmit = async (data: CardDetailsFormData) => {
     setIsSubmitting(true)
-    setSubmitMessage('')
 
     try {
       await onSubmit(data)
-      setSubmitMessage('Card details submitted successfully!')
       reset()
     } catch (error) {
-      setSubmitMessage('An error occurred while submitting the form.')
+      console.log(error)
     } finally {
       setIsSubmitting(false)
     }

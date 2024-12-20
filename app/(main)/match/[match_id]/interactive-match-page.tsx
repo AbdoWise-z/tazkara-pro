@@ -2,7 +2,7 @@
 
 import React, {useState} from 'react';
 import {MatchWithStadiumWithReservations} from "@/app/(main)/match/[match_id]/types";
-import {Calendar, MapPin, Minus, Plus} from "lucide-react";
+import {Calendar, MapPin } from "lucide-react";
 import {range} from "d3-array";
 import {useFloatingWindow} from "@/components/providers/floating-window-provider";
 import {useUser} from "@/components/providers/current-user-provider";
@@ -184,7 +184,7 @@ const InteractiveMatchPage = (
                   <DrawerDescription>Please enter you cards details to conform the seats purchase.</DrawerDescription>
                 </DrawerHeader>
                 <CardDetailsForm onSubmit={
-                  async (v) => {
+                  async () => {
                     await handleSubmit()
                   }
                 }/>

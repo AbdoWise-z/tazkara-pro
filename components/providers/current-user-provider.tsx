@@ -1,8 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useAuth } from '@clerk/clerk-react';
-import {undefined} from "zod";
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import {useAuth} from '@clerk/clerk-react';
 
 interface User {
   id: string;
@@ -89,10 +88,5 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const useUser = () => {
-  const context = useContext(UserContext);
-  // @ts-ignore
-  if (context === undefined) {
-    throw new Error('useUser must be used within a UserProvider');
-  }
-  return context;
+  return useContext(UserContext);
 };

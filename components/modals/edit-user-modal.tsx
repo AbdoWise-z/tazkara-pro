@@ -4,7 +4,7 @@ import * as z from "zod";
 import React, {useEffect} from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {CalendarIcon, Loader2} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { ModalType, useModal } from "@/hooks/use-modal";
 import { useUser } from "@/components/providers/current-user-provider";
 import {
