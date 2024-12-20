@@ -1,6 +1,6 @@
 "use client"
 
-import {BadgeCheck, ChevronsUpDown, CreditCard, LogOut, Sparkles,} from "lucide-react"
+import {BadgeCheck, ChevronsUpDown, CreditCard, Loader2, LogOut, Sparkles,} from "lucide-react"
 
 import {Avatar, AvatarFallback,} from "@/components/ui/avatar"
 import {
@@ -67,6 +67,21 @@ export function NavUser() {
       <Button
         className={"font-bold m-2"}
         size="default"
+        disabled
+        onClick={() => {
+          router.push("/sign-up")
+        }}
+      >
+        <Loader2 className={"w-4 h-4 animate-spin"}/>
+      </Button>
+    );
+  }
+
+  if (!user.id) {
+    return (
+      <Button
+        className={"font-bold m-2"}
+        size="default"
         onClick={() => {
           router.push("/sign-up")
         }}
@@ -75,6 +90,8 @@ export function NavUser() {
       </Button>
     );
   }
+
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -127,7 +144,9 @@ export function NavUser() {
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => {
-                modal.open(ModalType.EDIT_USER_INFO)
+                setTimeout(() => {
+                  modal.open(ModalType.EDIT_USER_INFO)
+                } , 100) // fml
               }}>
                 <CreditCard />
                 User Info

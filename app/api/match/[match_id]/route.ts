@@ -8,8 +8,8 @@ export async function GET(
 ) {
   try {
     const matchId = (await params).match_id;
-    const { userId } = await auth();
-    if (!userId) return new NextResponse("Unauthorized", { status: 401 });
+    // const { userId } = await auth();
+    // if (!userId) return new NextResponse("Unauthorized", { status: 401 });
 
     const match = await db.match.findUnique({
       where: {

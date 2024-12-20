@@ -4,7 +4,7 @@
 import {currentUserProfile} from "@/lib/user-profile";
 import {db} from "@/lib/db";
 
-export async function addReservation(matchId: string, row: number, column: number) {
+export async function addReservations(matchId: string, seats: number[]) {
   const user = await currentUserProfile();
   if (!user) {
     return {
@@ -14,67 +14,90 @@ export async function addReservation(matchId: string, row: number, column: numbe
     }
   }
 
-  // now check if the match exists
-  const match = await db.match.findUnique({
-    where: {
-      id: matchId,
-    },
-    include: {
-      stadium: true,
-    }
-  })
+  const success: number[] = [];
+  try {
+    const result = await db.$transaction(async (tx) => {
+      const revs = await tx.reservation.findMany({
+        where: {
+          userId: user.id,
+          matchId: {
+            notIn: [matchId],
+          },
+        },
 
-  if (!match) {
+        include: {
+          match: true
+        }
+      });
+
+      const match = await tx.match.findUnique({
+        where: {
+          id: matchId,
+        }
+      });
+
+      if (!match) {
+        return {
+          success: false,
+          fatal: true,
+          reason: "no such match"
+        }
+      }
+
+
+      const dateBefore3H = new Date(match.date);
+      dateBefore3H.setHours(dateBefore3H.getHours() - 3);
+      const dateAfter3H = new Date(match.date);
+      dateAfter3H.setHours(dateBefore3H.getHours() + 3);
+
+      if (revs.find((rev) => rev.match.date >= dateBefore3H && rev.match.date <= dateAfter3H) != null) {
+        return {
+          success: false,
+          fatal: false,
+          reason: "you already have a reservation for another match at this time."
+        }
+      }
+
+      console.log(seats)
+
+      for (const seat of seats) {
+        try {
+          await tx.reservation.create({
+            data: {
+              userId: user.id,
+              matchId: matchId,
+              seatIndex: seat,
+            }
+          })
+
+          success.push(seat)
+        } catch (e) {
+          // failed this one
+          console.log(e)
+        }
+      }
+
+      return {
+        success: true,
+        fatal: false,
+        reason: "",
+      }
+    })
+
+    console.log(result)
+
+    return {
+      success: result?.success ?? false,
+      fatal: result?.fatal ?? true,
+      reason: result?.reason ?? "WTF",
+      data: success
+    }
+  } catch (e) {
+    console.log(e);
     return {
       success: false,
       fatal: true,
-      reason: "no such match"
-    }
-  }
-
-  const seat = row * match.stadium.columnCount + column
-  // ok now check if that seat is empty
-  const rev = await db.reservation.findFirst({
-    where: {
-      matchId: matchId,
-      seatIndex: seat,
-    }
-  })
-
-  if (!rev) {
-    // ok its empty :)
-    // try to book it
-    try {
-      await db.reservation.create({
-        data: {
-          userId: user.id,
-          matchId: matchId,
-          seatIndex: seat,
-        }
-      })
-
-      return {
-        success: true,
-      }
-    } catch (e) {
-      console.log(e);
-      return {
-        success: false,
-        fatal: false,
-        reason: "someone else booked this"
-      }
-    }
-  } else {
-    if (rev.userId == user.id) {
-      return {
-        success: true,
-      }
-    } else {
-      return {
-        success: false,
-        fatal: false,
-        reason: "someone else booked this"
-      }
+      reason: "internal server error"
     }
   }
 }

@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from '@clerk/clerk-react';
+import {undefined} from "zod";
 
 interface User {
   id: string;
@@ -13,9 +14,9 @@ interface User {
   City: string | null;
   Address: string | null;
   EmailAddress: string;
-  Role: "Fan" | "Manager" | "Administrator";
-  createdAt: Date;
-  updatedAt: Date;
+  Role: "Fan" | "Manager" | "Administrator" | "Guest";
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }
 
 interface UserContextType {
@@ -25,7 +26,12 @@ interface UserContextType {
   refreshUser: () => Promise<void>;
 }
 
-const UserContext = createContext<UserContextType | undefined>(undefined);
+const UserContext = createContext<UserContextType>({
+  user: null,
+  refreshUser: async () => {},
+  error: null,
+  isLoading: false,
+});
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const { userId } = useAuth();
@@ -57,7 +63,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     if (userId) {
       fetchUser(userId);
     } else {
-      setUser(null);
+      setUser({
+        Address: null,
+        BirthDate: null,
+        City: null,
+        EmailAddress: "",
+        Gender: null,
+        createdAt: null,
+        firstName: null,
+        lastName: null,
+        updatedAt: null,
+        id: "",
+        clerk_id: "",
+        Role: "Guest"
+      });
       setIsLoading(false);
     }
   }, [userId]);
@@ -71,6 +90,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
 export const useUser = () => {
   const context = useContext(UserContext);
+  // @ts-ignore
   if (context === undefined) {
     throw new Error('useUser must be used within a UserProvider');
   }

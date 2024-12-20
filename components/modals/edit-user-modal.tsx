@@ -1,29 +1,22 @@
 "use client";
 
 import * as z from "zod";
-import React from 'react';
+import React, {useEffect} from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { format } from "date-fns";
 import {CalendarIcon, Loader2} from "lucide-react";
 import { ModalType, useModal } from "@/hooks/use-modal";
 import { useUser } from "@/components/providers/current-user-provider";
-import { cn } from "@/lib/utils";
 import {
   Dialog, DialogContent, DialogDescription,
   DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import {
   Form, FormControl, FormField,
   FormItem, FormLabel, FormMessage
 } from "@/components/ui/form";
-import {
-  Popover, PopoverContent,
-  PopoverTrigger
-} from "@/components/ui/popover";
 import {
   Select, SelectContent,
   SelectItem, SelectTrigger, SelectValue
@@ -34,14 +27,28 @@ import axios from "axios";
 import {toast} from "sonner";
 
 
+const formatDateToDatetimeLocal = (date: Date | string) => {
+  const d = date instanceof Date ? date : new Date(date);
+
+  if (isNaN(d.getTime())) {
+    return '';
+  }
+
+  // Get year, month, and day
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
 
 type UserFormData = z.infer<typeof userFormSchema>;
 
 const EditUserModal = () => {
   const modal = useModal();
   const router = useRouter();
-  const { user } = useUser();
-  const disableExit = user != null && user.firstName == null;
+  const { user, refreshUser } = useUser();
+  const disableExit = user != null && user.firstName == null && user.Role != 'Guest';
   const isOpen = modal.isOpen && modal.type === ModalType.EDIT_USER_INFO;
   const form = useForm<UserFormData>({
     resolver: zodResolver(userFormSchema),
@@ -55,11 +62,21 @@ const EditUserModal = () => {
     },
   });
 
+  useEffect(() => {
+    form.setValue("firstName" , user?.firstName ?? "");
+    form.setValue("lastName" , user?.lastName ?? "");
+    form.setValue("birthDate" , user?.BirthDate ?? new Date());
+    form.setValue("gender" , user?.Gender ?? true);
+    form.setValue("city" , user?.City ?? "");
+    form.setValue("address" , user?.Address ?? null);
+  }, [user, isOpen]);
+
   const handleSubmit = async (data: UserFormData) => {
     try {
       const response = await axios.post("/api/users", data);
-
-      if (response.status != 200) throw new Error('Failed to update user');
+      if (response.status != 200)
+        throw new Error('Failed to update user');
+      await refreshUser();
       modal.close();
       if (disableExit) {
         router.refresh();
@@ -79,14 +96,6 @@ const EditUserModal = () => {
   return (
     <Dialog open={isOpen || disableExit} onOpenChange={(o) => {
       if (!o && !disableExit) modal.close();
-      if (o) {
-        form.setValue("firstName" , user?.firstName ?? "");
-        form.setValue("lastName" , user?.lastName ?? "");
-        form.setValue("birthDate" , user?.BirthDate ?? new Date());
-        form.setValue("gender" , user?.Gender ?? true);
-        form.setValue("city" , user?.City ?? "");
-        form.setValue("address" , user?.Address ?? null);
-      }
     }}>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
@@ -131,36 +140,15 @@ const EditUserModal = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Date of birth</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 max-w-50 max-h-50" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value || undefined}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <Input
+                    id="date-input"
+                    type="date"
+                    value={formatDateToDatetimeLocal(field.value ?? new Date())}
+                    onChange={(v) => {
+                      console.log(v.target.value);
+                      field.onChange(new Date(v.target.value))
+                    }}
+                  />
                   <FormMessage />
                 </FormItem>
               )}

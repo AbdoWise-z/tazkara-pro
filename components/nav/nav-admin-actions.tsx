@@ -1,6 +1,6 @@
 "use client";
 
-import {LandPlot,} from "lucide-react"
+import {LandPlot, PersonStanding,} from "lucide-react"
 
 import {
   SidebarGroup,
@@ -28,6 +28,12 @@ export function NavAdminActions() {
       icon: LandPlot,
       func: null,
       url: "/auth",
+    },
+    {
+      name: "Manager Users",
+      icon: PersonStanding,
+      func: null,
+      url: "/users",
     },
     // {
     //   name: "Mange users",

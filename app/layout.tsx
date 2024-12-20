@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import {ClerkProvider} from "@clerk/nextjs";
 import {ThemeProvider} from "@/components/providers/theme-provider";
 import {UserProvider} from "@/components/providers/current-user-provider";
 import ModalProvider from "@/components/providers/modal-provider";
 import {Toaster} from "@/components/ui/sonner";
 import FloatingWindowProvider from "@/components/providers/floating-window-provider";
+import React from "react";
+import {ClerkProvider} from "@clerk/nextjs";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -39,7 +41,7 @@ export default function RootLayout({
             attribute="class"
             defaultTheme="system"
             enableSystem
-            disableTransitionOnChange={true}
+            disableTransitionOnChange
           >
             <UserProvider>
               <Toaster/>
@@ -54,3 +56,5 @@ export default function RootLayout({
     </ClerkProvider>
   );
 }
+
+export const dynamic = "force-dynamic"
