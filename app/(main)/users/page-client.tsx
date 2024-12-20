@@ -4,7 +4,15 @@ import React, {useEffect, useMemo, useState} from "react";
 import {getUsersList, deleteUser} from "@/app/(main)/users/actions";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
-import {ChevronDownIcon, ChevronsUpDownIcon, ChevronUpIcon, Loader, Loader2} from "lucide-react";
+import {
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRight,
+  ChevronsUpDownIcon,
+  ChevronUpIcon,
+  Loader,
+  Loader2, Trash2
+} from "lucide-react";
 import {Input} from "@/components/ui/input";
 import {toast} from "sonner";
 import {User} from "@prisma/client";
@@ -22,11 +30,11 @@ const PageClient = () => {
 
   const [loadingList , setLoadingList] = useState<string[]>([]);
 
-  // const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(0);
 
   useEffect(() => {
     const load = async () => {
-      const result = await getUsersList(0);
+      const result = await getUsersList(page);
       console.log(result);
       if (result.success){
         setUsersList(result.data!);
@@ -34,7 +42,7 @@ const PageClient = () => {
       setLoading(false);
     }
     load();
-  }, []);
+  }, [page]);
 
   const handleDeleteUser = async (req: User) => {
     setLoadingList((prev) => [...prev , req.id]);
@@ -172,7 +180,8 @@ const PageClient = () => {
                 )}
                 {(loadingList.find(k => k == user.id) == null) && (
                   <div className="flex space-x-2">
-                    <Button onClick={() => handleDeleteUser(user)} variant="outline">
+                    <Button className={""} onClick={() => handleDeleteUser(user)} variant="outline">
+                      <Trash2 className={"w-4 h-4"}/>
                       Delete
                     </Button>
                   </div>
@@ -182,6 +191,19 @@ const PageClient = () => {
           ))}
         </TableBody>
       </Table>
+      <div className={"flex flex-row space-x-2"}>
+        <Button size="icon" variant="outline" disabled={page == 0} onClick={() => {
+          setPage((p) => p - 1)
+        }}>
+          <ChevronLeftIcon className="w-4 h-4" />
+        </Button>
+
+        <Button size="icon" variant="outline" disabled={usersList.length != 100} onClick={() => {
+          setPage((p) => p + 1)
+        }}>
+          <ChevronRight className="w-4 h-4" />
+        </Button>
+      </div>
     </div>
   )
 };
