@@ -47,6 +47,7 @@ const PageClient = () => {
             },
           },
         })
+        setAuthRequests((prev) => prev.filter((v) => v.id != req.id))
       } else {
         toast("Failed", {
           description: `Reason: ${result.reason}`,
@@ -73,9 +74,21 @@ const PageClient = () => {
   const handleReject = async (req: AuthorizationWithUser) => {
     setLoadingList((prev) => [...prev , req.id]);
     try {
-      await rejectAuthRequest(req.id);
-      toast("Rejected successfully.", {
-      })
+      const result = await rejectAuthRequest(req.id);
+      if (result.success) {
+        toast("Rejected successfully.", {
+        })
+        setAuthRequests((prev) => prev.filter((v) => v.id != req.id))
+      } else {
+        toast("Failed", {
+          description: `Reason: ${result.reason}`,
+          action: {
+            label: "Ok",
+            onClick: () => {
+            },
+          },
+        })
+      }
     } catch (e) {
       toast("Error happened.", {
         description: `Details: ${e}`,
